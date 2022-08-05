@@ -3,7 +3,8 @@
     'name': ' Stock Basic enhancement',
     'version': '1.0.1',
     'summary': """automatic implementation for warehouse and operation type""",
-    'description': """internal transfer enhancement operation type automatic name and code,
+    'description': """
+      internal transfer enhancement operation type automatic name and code,
       add automatic purchase returns , sales returns and link sales returns with sales delevery & link purchase returns with purschase reciept,
       odoo standard when create new warehouse and create automatic operation then all operations take the same names for all warehouses created like (recipts-delivery-internal transfers)
       but with our application we added warehouse name to all automatic operations created like (warehouse one purchase recipt ,warehouse one sale deliver,
