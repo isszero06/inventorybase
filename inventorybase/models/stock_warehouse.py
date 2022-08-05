@@ -87,8 +87,6 @@ class StockWarehouse(models.Model):
         data = super(StockWarehouse, self)._get_picking_type_update_values()
         input_loc, output_loc = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
         data.update({
-            'inte_in_type_id': {'default_location_dest_id': input_loc.id},
-            'inte_out_type_id': {'default_location_src_id': output_loc.id},
             'sale_returns': {'default_location_dest_id': input_loc.id},
             'purchase_returns': {'default_location_src_id': output_loc.id},
             },
