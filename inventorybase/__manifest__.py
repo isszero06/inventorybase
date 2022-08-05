@@ -1,7 +1,7 @@
 
 {
     'name': ' Stock Basic enhancement',
-    'version': '13.0.1',
+    'version': '15.0.1',
     'summary': """Auto Genration for Sales Returns and Purchase Returns operations, 
                 Link them with Sales delivery,
                  Purchase Recipt and other Enhancment""",
