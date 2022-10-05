@@ -23,7 +23,6 @@ class StockWarehouse(models.Model):
 
 
     purchase_returns = fields.Many2one('stock.picking.type', 'Purchase Returns', check_company=True)
-    # return_type_id = fields.Many2one('stock.picking.type', 'Sale Returns', check_company=True)
 
 
 
