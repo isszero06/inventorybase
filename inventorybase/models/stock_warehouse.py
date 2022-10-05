@@ -9,16 +9,11 @@
 #
 #################################################################################
 
-from collections import namedtuple
-from datetime import datetime
-from dateutil import relativedelta
-
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.osv import expression
-
 import logging
+from collections import namedtuple
+
+from odoo import _, _lt, api, fields, models
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -28,7 +23,7 @@ class StockWarehouse(models.Model):
 
 
     purchase_returns = fields.Many2one('stock.picking.type', 'Purchase Returns', check_company=True)
-    sale_returns = fields.Many2one('stock.picking.type', 'Sale Returns', check_company=True)
+    # return_type_id = fields.Many2one('stock.picking.type', 'Sale Returns', check_company=True)
 
 
 
@@ -39,38 +34,38 @@ class StockWarehouse(models.Model):
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
         code = vals.get('code') or code or ''
         code = code.replace(' ', '').upper()
-        name = _(vals.get('name'))
+        name = vals.get('name')
         company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
         data.update({
             'lot_stock_id': {
-                'name': name ,
+                'name': name,
                 'active': True,
                 'usage': 'internal',
-                'barcode': self._valid_barcode(name + '-STOCK', company_id)
+                'barcode': self._valid_barcode(code + '-STOCK', company_id)
             },
             'wh_input_stock_loc_id': {
                 'name': _('Input'),
                 'active': reception_steps != 'one_step',
                 'usage': 'internal',
-                'barcode': self._valid_barcode(name + '-INPUT', company_id)
+                'barcode': self._valid_barcode(code + '-INPUT', company_id)
             },
             'wh_qc_stock_loc_id': {
                 'name': _('Quality Control'),
                 'active': reception_steps == 'three_steps',
                 'usage': 'internal',
-                'barcode': self._valid_barcode(name + '-QUALITY', company_id)
+                'barcode': self._valid_barcode(code + '-QUALITY', company_id)
             },
             'wh_output_stock_loc_id': {
                 'name': _('Output'),
                 'active': delivery_steps != 'ship_only',
                 'usage': 'internal',
-                'barcode': self._valid_barcode(name + '-OUTPUT', company_id)
+                'barcode': self._valid_barcode(code + '-OUTPUT', company_id)
             },
             'wh_pack_stock_loc_id': {
                 'name': _('Packing Zone'),
                 'active': delivery_steps == 'pick_pack_ship',
                 'usage': 'internal',
-                'barcode': self._valid_barcode(name + '-PACKING', company_id)
+                'barcode': self._valid_barcode(code + '-PACKING', company_id)
             },
             },
         )
@@ -97,7 +92,7 @@ class StockWarehouse(models.Model):
         data = super(StockWarehouse, self)._get_picking_type_update_values()
         input_loc, output_loc = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
         data.update({
-            'sale_returns': {'default_location_dest_id': input_loc.id},
+            'return_type_id': {'default_location_dest_id': input_loc.id},
             'purchase_returns': {'default_location_src_id': output_loc.id},
             },
         )
@@ -181,7 +176,7 @@ class StockWarehouse(models.Model):
                 'sequence_code': self.name + ' ' + _('Purchase Returns'), 
                 'company_id': self.company_id.id,
             },
-            'sale_returns': {
+            'return_type_id': {
                 'name': self.name + ' ' + _('Sale Returns'),
                 'code': 'incoming',
                 'use_create_lots': True,
@@ -239,7 +234,7 @@ class StockWarehouse(models.Model):
                 'padding': 5,
                 'company_id': self.company_id.id,
             },
-            'sale_returns': {
+            'return_type_id': {
                 'name': self.name + ' ' + _('Sale Returns'),
                 'prefix':self.name + ' ' + _('Sale Returns/%(range_year)s/'),
                 'range_reset' : 'yearly',
@@ -262,7 +257,8 @@ class StockWarehouse(models.Model):
         data = super()._create_or_update_sequences_and_picking_types()
         PickingType = self.env["stock.picking.type"]
         if 'out_type_id' in data:
-            PickingType.browse(data['out_type_id']).write({'return_picking_type_id': data.get('sale_returns', False)})
+            PickingType.browse(data['out_type_id']).write({'return_picking_type_id': data.get('return_type_id', False)})
         if 'in_type_id' in data:
             PickingType.browse(data['in_type_id']).write({'return_picking_type_id': data.get('purchase_returns', False)})
         return data
+
