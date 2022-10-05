@@ -9,11 +9,13 @@
 #
 #################################################################################
 
-from datetime import date as datetime_date, timedelta
+import logging
+from collections import namedtuple
 
-from dateutil.relativedelta import relativedelta
+from odoo import _, _lt, api, fields, models
+from odoo.exceptions import UserError
 
-from odoo import fields, models
+_logger = logging.getLogger(__name__)
 
 
 class IrSequence(models.Model):
