@@ -11,6 +11,9 @@
 
 import logging
 from collections import namedtuple
+from datetime import date as datetime_date, timedelta
+
+from dateutil.relativedelta import relativedelta
 
 from odoo import _, _lt, api, fields, models
 from odoo.exceptions import UserError
