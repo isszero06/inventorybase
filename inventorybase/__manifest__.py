@@ -11,7 +11,7 @@
 
 {
     'name': ' Stock Basic enhancement',
-    'version': '14.0.1',
+    'version': '14.0.2',
     'summary': """Auto Genration for Sales Returns and Purchase Returns operations, 
                 Link them with Sales delivery,
                  Purchase Recipt and other Enhancment""",
@@ -41,7 +41,7 @@
     'installable': True,
     'auto_install': False,
     'application': False,
-    'price': 50.0,
+    'price': 20.0,
     'currency': 'USD',
     "pre_init_hook": "pre_init_check",
 }
