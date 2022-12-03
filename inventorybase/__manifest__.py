@@ -37,7 +37,7 @@
     ],
     'license': 'OPL-1',
     'live_test_url': 'https://www.youtube.com/watch?v=1S9B4HsxtEw',
-    'images': ['static/description/icon.png'],
+    'images': ['static/description/logo.PNG'],
     'installable': True,
     'auto_install': False,
     'application': False,
