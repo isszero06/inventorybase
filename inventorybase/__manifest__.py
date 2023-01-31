@@ -42,6 +42,6 @@
     'auto_install': False,
     'application': False,
     'price': 25.0,
-    'currency': 'USD',
+    'currency': 'EUR',
     "pre_init_hook": "pre_init_check",
 }
